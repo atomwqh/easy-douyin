@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "./user";
+
+
+message LoginRequest {
+  string Mobile = 1;
+  string Password = 2;
+}
+message LoginResponse {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  int64 UserId = 3;
+  string Avatar= 4;
+  string Name = 5;
+  int64 Gender = 6;
+  string background_image=7;
+  string Signature=8;
+}
+
+message RegisterRequest {
+  string Name = 1;
+  int64 Gender = 2;
+  string Mobile = 3;
+  string Password = 4;
+  string Avatar =5;
+  string Dec = 6;
+  string background_image=7;
+}
+message RegisterResponse {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+}
+
+message UserInfoRequest {
+  int64 userId = 1;
+  int64 actorId = 2;
+}
+message UserInfoResponse {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  UserInfo user = 3; // 用户信息
+}
+
+message UserInfo {
+  uint32 id = 1; // 用户id
+  string name = 2; // 用户名称
+  optional uint32 follow_count = 3; // 关注总数
+  optional uint32 follower_count = 4; // 粉丝总数
+  bool is_follow = 5; // true-已关注，false-未关注
+  optional string avatar = 6; //用户头像
+  optional string background_image = 7; //用户个人页顶部大图
+  optional string signature = 8; //个人简介
+  optional uint32 total_favorited = 9; //获赞数量
+  optional uint32 work_count = 10; //作品数量
+  optional uint32 favorite_count = 11; //点赞数量
+  uint32 gender = 12; // 用户名称
+  int64 friend_count=13;
+}
+
+
+message UpdateReq {
+  string name = 1;
+  int64 gender = 2;
+  string avatar = 3;
+  string dec = 4;
+  string background_image = 5;
+  int64 uid=6;
+}
+
+message UpdateResp {
+  int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+}
+service UseSrv {
+  //用户登录
+  rpc Login(LoginRequest) returns(LoginResponse);
+  //用户注册
+  rpc Register(RegisterRequest) returns(RegisterResponse);
+  //用户信息
+  rpc UserInfo(UserInfoRequest) returns(UserInfoResponse);
+  //修改用户信息
+  rpc Update(UpdateReq) returns(UpdateResp);
+}

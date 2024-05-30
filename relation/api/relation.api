@@ -1,0 +1,72 @@
+syntax = "v1"
+
+type (
+	actionReq {
+		ToUserId int64 `json:"to_user_id"`  //关注谁
+		Action   int32 `json:"action_type"` // 1 关注 2 是取关 其他是报错
+	}
+	actionResp {
+		StatusCode int    `json:"status_code"`
+		StatusMsg  string `json:"status_msg"`
+	}
+
+	FavoriteListReq {
+		Uid int64 `form:"uid"`
+	}
+	UserInfo {
+		Id              int64  `json:"id"`
+		Name            string `json:"name"`
+		Gender          int64  `json:"gender"`
+		Mobile          string `json:"mobile"`
+		Avatar          string `json:"avatar"`
+		Dec             string `json:"dec"`
+		BackgroundImage string `json:"background_image"`
+		FollowCount     uint32 `json:"follow_count"`
+		FollowerCount   uint32 `json:"follower_count"`
+		TotalFavorited  uint32 `json:"total_favorited"`
+		WorkCount       uint32 `json:"work_count"`
+		FavoriteCount   uint32 `json:"favorite_count"`
+		IsFollow        bool   `json:"is_follow"`
+		CoverUrl        string `json:"cover_url"`
+		VideoId         int64  `json:"video_id"`
+		FriendCount     int64  `json:"friend_count"`
+	}
+	FavoriteListResp {
+		StatusCode int        `json:"status_code"`
+		StatusMsg  string     `json:"status_msg"`
+		List       []UserInfo `json:"list"`
+	}
+	FollowerListReq {
+		Uid int64 `form:"uid"`
+	}
+	FollowerListResp {
+		StatusCode int        `json:"status_code"`
+		StatusMsg  string     `json:"status_msg"`
+		List       []UserInfo `json:"list"`
+	}
+	FriendListReq {
+		Uid int64 `form:"uid"`
+	}
+	FriendListResp {
+		StatusCode int        `json:"status_code"`
+		StatusMsg  string     `json:"status_msg"`
+		List       []UserInfo `json:"list"`
+	}
+)
+
+@server(
+	jwt: Auth
+)
+service relation {
+	@handler FavoriteAction
+	post /relation/action (actionReq) returns(actionResp)
+
+	@handler FavoriteList
+	get /relation/favoriteList (FavoriteListReq) returns(FavoriteListResp)
+
+	@handler FollowerList
+	get /relation/followerList (FollowerListReq) returns(FollowerListResp)
+
+	@handler FriendList
+	get /relation/friendList (FriendListReq) returns(FriendListResp)
+}

@@ -1,0 +1,18 @@
+Name: favorite-api
+Host: 0.0.0.0
+Port: 8892
+Timeout: 20000
+Favorite:
+  Target: consul://172.22.110.66:8501/favorite.rpc?wait=14s
+  Timeout: 20000
+Auth:
+  AccessSecret: uOvKLmVfztaXGpNYd4Z0I1SiT7MweJhl
+  AccessExpire: 86400
+Telemetry:
+  Name: wsva
+  Endpoint: http://172.22.110.66:14278/api/traces
+Prometheus:
+  Host: 0.0.0.0
+  Port: 9772
+  Path: /metrics
+RecommendUrl: http://172.22.121.54:8088

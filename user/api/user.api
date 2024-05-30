@@ -1,0 +1,118 @@
+/*
+* @Author: Xu Ning
+* @Date: 2023-10-26 20:05:39
+* @LastEditors: Xu Ning
+* @LastEditTime: 2023-10-28 13:48:26
+* @Description:
+* @FilePath: \scooter-WSVA\backend\user\api\user.api
+*/
+type (
+	// 用户登录
+	LoginRequest {
+		Mobile   string `json:"mobile"`
+		Password string `json:"password"`
+	}
+	LoginResponse {
+		StatusCode      int    `json:"status_code"`
+		StatusMsg       string `json:"status_msg"`
+		Avatar          string `json:"avatar"`
+		AccessToken     string `json:"accessToken"`
+		UserID          int64  `json:"user_id"`
+		Name            string `json:"name"`
+		Gender          uint32 `json:"gender"`
+		Signature       string `json:"signature"`
+		BackgroundImage string `json:"background_image"` //用户个人页顶部大图
+	}
+
+	// 用户登录
+
+	// 用户注册
+	RegisterRequest {
+		Name            string `json:"name"`
+		Gender          int64  `json:"gender"`
+		Mobile          string `json:"mobile"`
+		Password        string `json:"password"`
+		Dec             string `json:"dec"`
+		Avatar          string `json:"avatar"`
+		BackgroundImage string `json:"background_image"`
+	}
+	RegisterResponse {
+		StatusCode int    `json:"status_code"`
+		StatusMsg  string `json:"status_msg"`
+	}
+	UploadImageResponse {
+		StatusCode int    `json:"status_code"`
+		StatusMsg  string `json:"status_msg"`
+		Url        string `json:"url"`
+	}
+	// 用户编辑信息
+	UpdateRequest {
+		Name            string `json:"name,optional"`
+		Gender          int64  `json:"gender,optional"`
+		Avatar          string `json:"avatar,optional"`
+		Dec             string `json:"dec,optional"`
+		BackgroundImage string `json:"background_image,optional"`
+	}
+	UpdateResponse {
+		StatusCode int    `json:"status_code"`
+		StatusMsg  string `json:"status_msg"`
+	}
+	// 用户信息
+	UserInfoReq {
+		Uid int64 `json:"uid"`
+	}
+	UserInfoResponse {
+		StatusCode int    `json:"status_code"`
+		StatusMsg  string `json:"status_msg"`
+		User       User   `json:"user"`
+	}
+	User {
+		Id              uint32 `json:"id"`
+		Name            string `json:"name"`
+		Avatar          string `json:"avatar"`
+		Gender          uint32 `json:"gender"`
+		Signature       string `json:"signature"`
+		BackgroundImage string `json:"background_image"` //用户个人页顶部大图
+		FollowCount     uint32 `json:"follow_count"`
+		FollowerCount   uint32 `json:"follower_count"`
+		TotalFavorited  uint32 `json:"total_favorited"`
+		WorkCount       uint32 `json:"work_count"`
+		FavoriteCount   uint32 `json:"favorite_count"`
+		IsFollow        bool   `json:"is_follow"`
+		FriendCount     int64  `json:"friend_count"`
+	}
+	UserUploadResponse {
+		StatusCode int    `json:"status_code"`
+		StatusMsg  string `json:"status_msg"`
+		Url        string `json:"url"`
+		CoverUrl   string `json:"coverUrl"`
+	}
+)
+
+service User {
+	@handler Login
+	post /user/login (LoginRequest) returns (LoginResponse)
+
+	@handler Register
+	post /user/register (RegisterRequest) returns (RegisterResponse)
+
+	@handler UploadImg
+	post /user/uploadImg returns(UploadImageResponse)
+}
+
+@server(
+	jwt: Auth
+)
+service User {
+	@doc(
+		summary: "user"
+	)
+	@handler UserInfo
+	post /user/userinfo (UserInfoReq) returns (UserInfoResponse)
+
+	@handler Upload
+	post /user/upload returns (UserUploadResponse)
+
+	@handler Update
+	post /user/update (UpdateRequest)returns(UpdateResponse)
+}
